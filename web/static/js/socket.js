@@ -1,62 +1,70 @@
-// NOTE: The contents of this file will only be executed if
-// you uncomment its entry in "web/static/js/app.js".
-
-// To use Phoenix channels, the first step is to import Socket
-// and connect at the socket path in "lib/my_app/endpoint.ex":
 import {Socket} from "deps/phoenix/web/static/js/phoenix"
+import State from './state';
+import Game from './entities/Game';
 
-let socket = new Socket("/socket", {params: {token: window.userToken}})
+const buildGame = (gameData) => {
+  gameData.players = Immutable.Map(gameData.players);
+  return new Game(gameData);
+};
 
-// When you connect, you'll often need to authenticate the client.
-// For example, imagine you have an authentication plug, `MyAuth`,
-// which authenticates the session and assigns a `:current_user`.
-// If the current user exists you can assign the user's token in
-// the connection for use in the layout.
-//
-// In your "web/router.ex":
-//
-//     pipeline :browser do
-//       ...
-//       plug MyAuth
-//       plug :put_user_token
-//     end
-//
-//     defp put_user_token(conn, _) do
-//       if current_user = conn.assigns[:current_user] do
-//         token = Phoenix.Token.sign(conn, "user socket", current_user.id)
-//         assign(conn, :user_token, token)
-//       else
-//         conn
-//       end
-//     end
-//
-// Now you need to pass this token to JavaScript. You can do so
-// inside a script tag in "web/templates/layout/app.html.eex":
-//
-//     <script>window.userToken = "<%= assigns[:user_token] %>";</script>
-//
-// You will need to verify the user token in the "connect/2" function
-// in "web/channels/user_socket.ex":
-//
-//     def connect(%{"token" => token}, socket) do
-//       # max_age: 1209600 is equivalent to two weeks in seconds
-//       case Phoenix.Token.verify(socket, "user socket", token, max_age: 1209600) do
-//         {:ok, user_id} ->
-//           {:ok, assign(socket, :user, user_id)}
-//         {:error, reason} ->
-//           :error
-//       end
-//     end
-//
-// Finally, pass the token on connect as below. Or remove it
-// from connect if you don't care about authentication.
+let gamesCursor = State.select('games');
+let currentPlayer = State.select('player');
 
-socket.connect()
+let socket = new Socket("/socket", {params: {player_uuid: currentPlayer.get()}});
+socket.connect();
 
-// Now that you are connected, you can join channels with a topic:
-let channel = socket.channel("topic:subtopic", {})
-channel.join()
-  .receive("ok", resp => { console.log("Joined successfully", resp) })
-  .receive("error", resp => { console.log("Unable to join", resp) })
+let gamesChannel = socket.channel("games", {});
 
-export default socket
+gamesChannel.join()
+  .receive("ok", resp => console.info('Connected to Phoenix'))
+  .receive("error", resp => console.error(resp));
+
+gamesChannel.on('get-all', resp => {
+  gamesCursor.apply(current => {
+    return resp.games.reduce((memo,game) => {
+      return memo.set(game.uuid, buildGame(game));
+    }, Immutable.Map());
+  });
+});
+
+gamesChannel.on('create', game => {
+  gamesCursor.apply(current => {
+    return current.set(game.uuid, buildGame(game));
+  });
+});
+
+gamesChannel.on('update', game => {
+  gamesCursor.apply(current => {
+    return current.set(game.uuid, buildGame(game));
+  });
+});
+
+gamesChannel.on('destroy', game => {
+  gamesCursor.apply(current => {
+    return current.delete(game.uuid);
+  });
+});
+
+gamesChannel.on('finish', game => {
+  gamesCursor.apply(current => {
+    return current.set(game.uuid, buildGame(game));
+  });
+});
+
+const startGame = () => {
+  gamesChannel.push("start", {});
+};
+
+const joinGame = (gameUuid) => {
+  gamesChannel.push("join", {game_uuid: gameUuid});
+};
+
+const makeMove = (gameUuid, move) => {
+  gamesChannel.push("move", {game_uuid: gameUuid, move: move});
+};
+
+export default {
+  startGame,
+  joinGame,
+  makeMove
+};

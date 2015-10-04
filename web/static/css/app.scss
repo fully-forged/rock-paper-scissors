@@ -1,1 +1,59 @@
 @import 'bourbon/bourbon';
+@import 'colors';
+
+* {
+  font-family: Helvetica Neue;
+}
+
+body {
+  background-color: $black;
+}
+
+button {
+  background-color: $gray;
+  color: $cream;
+  border: 0;
+  padding: 1em 2em;
+  font-size: 1em;
+  font-weight: bold;
+}
+
+#games {
+  header {
+    @include display(flex);
+    @include justify-content(space-between);
+  }
+
+  h1 {
+    color: $cream;
+    font-size: 2em;
+  }
+
+  .list {
+    max-width: 80em;
+    margin: 0 auto;
+    @include display(flex);
+    @include flex-wrap(wrap);
+  }
+
+  .game {
+    @include display(flex);
+    @include justify-content(center);
+    @include align-items(center);
+    width: 14em;
+    height: 14em;
+    margin: 1em;
+    background-color: $blue;
+
+    .moves button {
+      padding: 0.6em;
+      margin: 0.1em;
+    }
+
+    .notice {
+      background-color: $cream;
+      color: $brown;
+      padding: 1em 2em;
+    }
+  }
+}

@@ -1,0 +1,3 @@
+alias RockPaperScissors.GameRegistry
+alias RockPaperScissors.GameSupervisor
+alias RockPaperScissors.Game

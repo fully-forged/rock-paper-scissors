@@ -4,7 +4,7 @@ defmodule RockPaperScissors.Game do
   defstruct uuid: nil
 
   def start_link(uuid) do
-    GenServer.start_link(__MODULE__, uuid)
+    GenServer.start_link(__MODULE__, uuid, name: via_tuple(uuid))
   end
 
   def state(pid) do
@@ -17,5 +17,9 @@ defmodule RockPaperScissors.Game do
 
   def handle_call(:state, _from, state) do
     {:reply, state, state}
+  end
+
+  defp via_tuple(uuid) do
+    {:via, RockPaperScissors.GameRegistry, {:game, uuid}}
   end
 end

@@ -27,4 +27,22 @@ defmodule RockPaperScissors.GameTest do
       "player-2" => %Player{uuid: "player-2"}
     }
   end
+
+  test "players can move", %{game: game} do
+    Game.join(game, "player-1")
+    Game.join(game, "player-2")
+    Game.move(game, "player-2", :rock)
+    state = Game.state(game)
+    assert state.players["player-2"].move == :rock
+    assert state.players["player-1"].move == nil
+  end
+
+  test "it finishes when both players have moved", %{game: game} do
+    Game.join(game, "player-1")
+    Game.join(game, "player-2")
+    Game.move(game, "player-2", :rock)
+    Game.move(game, "player-1", :scissors)
+    :timer.sleep 10
+    assert Process.info(game) == nil
+  end
 end

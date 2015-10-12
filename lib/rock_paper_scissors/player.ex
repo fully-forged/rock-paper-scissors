@@ -1,3 +1,4 @@
 defmodule RockPaperScissors.Player do
-  defstruct uuid: nil
+  defstruct uuid: nil,
+            move: nil
 end

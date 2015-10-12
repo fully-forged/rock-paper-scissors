@@ -1,9 +1,11 @@
 defmodule RockPaperScissors.Game do
   use GenServer
   alias RockPaperScissors.Player
+  alias RockPaperScissors.GameRules
 
   defstruct uuid: nil,
-            players: %{}
+            players: %{},
+            winner: nil
 
   @moves [:rock, :paper, :scissors]
 
@@ -46,7 +48,7 @@ defmodule RockPaperScissors.Game do
     end)
 
     if both_moved?(new_state.players) do
-      {:stop, :normal, new_state}
+      {:stop, :normal, Map.put(new_state, :winner, GameRules.winner_for(new_state))}
     else
       {:noreply, new_state}
     end

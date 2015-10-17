@@ -4,6 +4,7 @@ defmodule RockPaperScissors do
   alias RockPaperScissors.GameRegistry
   alias RockPaperScissors.GameDispatcher
   alias RockPaperScissors.GameDispatcherManager
+  alias RockPaperScissors.GameChannelBridge
   alias RockPaperScissors.GameLogger
 
   # See http://elixir-lang.org/docs/stable/elixir/Application.html
@@ -19,6 +20,7 @@ defmodule RockPaperScissors do
       worker(GameRegistry, []),
       worker(GenEvent, [[name: GameDispatcher]]),
       worker(GameDispatcherManager, [GameDispatcher, GameLogger], id: GameLogger),
+      worker(GameDispatcherManager, [GameDispatcher, GameChannelBridge], id: GameChannelBridge),
       supervisor(GameSupervisor, []),
       # Here you could define other workers and supervisors as children
       # worker(RockPaperScissors.Worker, [arg1, arg2, arg3]),

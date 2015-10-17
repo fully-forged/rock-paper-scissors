@@ -14,6 +14,7 @@ defmodule RockPaperScissors do
       # Start the Ecto repository
       worker(RockPaperScissors.Repo, []),
       worker(GameRegistry, []),
+      worker(GenEvent, [[name: RockPaperScissors.GameDispatcher]]),
       supervisor(GameSupervisor, []),
       # Here you could define other workers and supervisors as children
       # worker(RockPaperScissors.Worker, [arg1, arg2, arg3]),

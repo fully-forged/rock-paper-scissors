@@ -26,7 +26,9 @@ defmodule RockPaperScissors.Game do
   end
 
   def init(uuid) do
-    {:ok, %__MODULE__{uuid: uuid}}
+    state = %__MODULE__{uuid: uuid}
+    GenEvent.notify(RockPaperScissors.GameDispatcher, {:create, state})
+    {:ok, state}
   end
 
   def handle_call(:state, _from, state) do
@@ -37,6 +39,7 @@ defmodule RockPaperScissors.Game do
     new_state = Map.update!(state, :players, fn(current) ->
       Map.put(current, player_uuid, %Player{uuid: player_uuid})
     end)
+    GenEvent.notify(RockPaperScissors.GameDispatcher, {:update, new_state})
     {:noreply, new_state}
   end
 
@@ -48,8 +51,11 @@ defmodule RockPaperScissors.Game do
     end)
 
     if both_moved?(new_state.players) do
-      {:stop, :normal, Map.put(new_state, :winner, GameRules.winner_for(new_state))}
+      with_winner = Map.put(new_state, :winner, GameRules.winner_for(new_state))
+      GenEvent.notify(RockPaperScissors.GameDispatcher, {:finish, with_winner})
+      {:stop, :normal, with_winner}
     else
+      GenEvent.notify(RockPaperScissors.GameDispatcher, {:update, new_state})
       {:noreply, new_state}
     end
   end

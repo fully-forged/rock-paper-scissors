@@ -2,6 +2,9 @@ defmodule RockPaperScissors do
   use Application
   alias RockPaperScissors.GameSupervisor
   alias RockPaperScissors.GameRegistry
+  alias RockPaperScissors.GameDispatcher
+  alias RockPaperScissors.GameDispatcherManager
+  alias RockPaperScissors.GameLogger
 
   # See http://elixir-lang.org/docs/stable/elixir/Application.html
   # for more information on OTP Applications
@@ -14,7 +17,8 @@ defmodule RockPaperScissors do
       # Start the Ecto repository
       worker(RockPaperScissors.Repo, []),
       worker(GameRegistry, []),
-      worker(GenEvent, [[name: RockPaperScissors.GameDispatcher]]),
+      worker(GenEvent, [[name: GameDispatcher]]),
+      worker(GameDispatcherManager, [GameDispatcher, GameLogger], id: GameLogger),
       supervisor(GameSupervisor, []),
       # Here you could define other workers and supervisors as children
       # worker(RockPaperScissors.Worker, [arg1, arg2, arg3]),

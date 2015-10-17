@@ -16,8 +16,6 @@ defmodule RockPaperScissors.GameSupervisor do
       worker(Game, [], restart: :temporary)
     ]
 
-    GenEvent.add_handler(RockPaperScissors.GameDispatcher, RockPaperScissors.GameLogger, [])
-
     supervise(children, strategy: :simple_one_for_one)
   end
 end

@@ -20,3 +20,13 @@ Ready to run in production? Please [check our deployment guides](http://www.phoe
   * Docs: http://hexdocs.pm/phoenix
   * Mailing list: http://groups.google.com/group/phoenix-talk
   * Source: https://github.com/phoenixframework/phoenix
+
+## Checklist
+
+- [x] Start a new game
+- [x] Get list of running games
+- [x] Join a game
+- [x] Make a move
+- [x] Calculate winner
+- [x] Log game events
+- [x] Pipe game events to Phoenix

@@ -30,3 +30,9 @@ Ready to run in production? Please [check our deployment guides](http://www.phoe
 - [x] Calculate winner
 - [x] Log game events
 - [x] Pipe game events to Phoenix
+
+## Tutorial
+
+Shows commits and descriptions since the `starter` tag.
+
+    git log --pretty=format:'%Cgreen%h - %Cred%s%Creset%n%b' --reverse starter..HEAD

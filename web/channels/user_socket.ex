@@ -2,7 +2,7 @@ defmodule RockPaperScissors.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  # channel "rooms:*", RockPaperScissors.RoomChannel
+  channel "games", RockPaperScissors.GameChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket
@@ -19,8 +19,8 @@ defmodule RockPaperScissors.UserSocket do
   #
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
-  def connect(_params, socket) do
-    {:ok, socket}
+  def connect(%{"player_uuid" => player_uuid}, socket) do
+    {:ok, assign(socket, :player_uuid, player_uuid)}
   end
 
   # Socket id's are topics that allow you to identify all sockets for a given user:

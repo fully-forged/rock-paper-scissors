@@ -1,1 +1,4 @@
 <div id="main"></div>
+<script>
+  window.PLAYER_UUID = "<%= @player_uuid %>";
+</script>

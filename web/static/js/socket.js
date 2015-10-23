@@ -9,14 +9,20 @@ const buildGame = (gameData) => {
 
 let gamesCursor = State.select('games');
 let currentPlayer = State.select('player');
+let scoreCursor = State.select('score');
 
 let socket = new Socket("/socket", {params: {player_uuid: currentPlayer.get()}});
 socket.connect();
 
 let gamesChannel = socket.channel("games", {});
+let scoreChannel = socket.channel(`score:${currentPlayer.get()}`);
 
 gamesChannel.join()
-  .receive("ok", resp => console.info('Connected to Phoenix'))
+  .receive("ok", resp => console.info('Connected to Games'))
+  .receive("error", resp => console.error(resp));
+
+scoreChannel.join()
+  .receive("ok", resp => console.info('Connected to Score'))
   .receive("error", resp => console.error(resp));
 
 gamesChannel.on('get-all', resp => {
@@ -49,6 +55,10 @@ gamesChannel.on('finish', game => {
   gamesCursor.apply(current => {
     return current.set(game.uuid, buildGame(game));
   });
+});
+
+scoreChannel.on('score', resp => {
+  scoreCursor.apply(current => resp.score);
 });
 
 const startGame = () => {

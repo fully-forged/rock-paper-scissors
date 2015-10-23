@@ -6,6 +6,7 @@ defmodule RockPaperScissors do
   alias RockPaperScissors.GameDispatcherManager
   alias RockPaperScissors.GameChannelBridge
   alias RockPaperScissors.GameLogger
+  alias RockPaperScissors.GameScore
 
   # See http://elixir-lang.org/docs/stable/elixir/Application.html
   # for more information on OTP Applications
@@ -21,6 +22,7 @@ defmodule RockPaperScissors do
       worker(GenEvent, [[name: GameDispatcher]]),
       worker(GameDispatcherManager, [GameDispatcher, GameLogger], id: GameLogger),
       worker(GameDispatcherManager, [GameDispatcher, GameChannelBridge], id: GameChannelBridge),
+      worker(GameScore, [GameScore]),
       supervisor(GameSupervisor, []),
       # Here you could define other workers and supervisors as children
       # worker(RockPaperScissors.Worker, [arg1, arg2, arg3]),

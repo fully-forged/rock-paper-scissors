@@ -32,6 +32,11 @@ Ready to run in production? Please [check our deployment guides](http://www.phoe
 - [x] Log game events
 - [x] Pipe game events to Phoenix
 
+## Additional features
+
+- [ ] Tracking score
+- [ ] Prevent cheating
+
 ## Tutorial
 
 Shows commits and descriptions since the `starter` tag.

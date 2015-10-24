@@ -5,9 +5,10 @@ To start, clone the repo and `git checkout starter`
 Then:
 
   1. Install dependencies with `mix deps.get`
-  2. Create and migrate your database with `mix ecto.create && mix ecto.migrate`
-  3. Install js dependencies with `npm install`
-  4. Start Phoenix endpoint with `mix phoenix.server`
+  2. Configure your postgres user in your database files in config/[dev|test].exs 
+  3. Create and migrate your database with `mix ecto.create && mix ecto.migrate`
+  4. Install js dependencies with `npm install`
+  5. Start Phoenix endpoint with `mix phoenix.server`
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 

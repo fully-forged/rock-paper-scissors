@@ -10,6 +10,13 @@ defmodule RockPaperScissors.GameView do
   end
 
   def render("game.json", %{game: game}) do
-    game |> Map.from_struct
+    game
+    |> Map.from_struct
+    |> Map.update!(:players, fn(players) ->
+      Enum.map(players, fn({uuid, player}) ->
+        {uuid, %{uuid: uuid, moved: player.move !== nil}}
+      end)
+      |> Enum.into(%{})
+    end)
   end
 end

@@ -15,7 +15,7 @@ const joined = (game, player) => {
 }
 
 const madeMove = (game, player) => {
-  return joined(game, player) && game.players.get(player).move !== null;
+  return joined(game, player) && game.players.get(player).moved;
 }
 
 const finished = (game, player) => {

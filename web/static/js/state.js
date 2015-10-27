@@ -1,6 +1,7 @@
 const initialData = {
   player: window.PLAYER_UUID,
-  games: Immutable.Map({})
+  games: Immutable.Map({}),
+  score: 0
 }
 
 const facets = {

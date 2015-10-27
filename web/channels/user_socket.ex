@@ -3,6 +3,7 @@ defmodule RockPaperScissors.UserSocket do
 
   ## Channels
   channel "games", RockPaperScissors.GameChannel
+  channel "score:*", RockPaperScissors.ScoreChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket

@@ -14,6 +14,9 @@ config :rock_paper_scissors, RockPaperScissors.Endpoint,
   pubsub: [name: RockPaperScissors.PubSub,
            adapter: Phoenix.PubSub.PG2]
 
+config :rock_paper_scissors,
+  ecto_repos: [RockPaperScissors.Repo]
+
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
